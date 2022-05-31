@@ -10,8 +10,9 @@ public class Subject {
 
     public Subject(){}
 
-    public Subject(String subjectName, int tongSoTiet, int soTietLyThuyet, int mucKinhPhi) {
+    public Subject(String subjectName, int soTiet, int soTietLyThuyet, int mucKinhPhi) {
         this.subjectId = id++;
+        this.subjectName= subjectName;
         this.soTiet = soTiet;
         this.soTietLyThuyet = soTietLyThuyet;
         this.mucKinhPhi = mucKinhPhi;
@@ -19,7 +20,7 @@ public class Subject {
 
     public void inputInfoSubject(){
         this.subjectId = id++;
-        System.out.println("Nhập tên môn học: ");
+        System.out.println("Nhập tên môn học thứ có id "+this.getSubjectId()+": ");
         this.subjectName = new Scanner(System.in).nextLine();
         boolean check = true;
         System.out.println("Nhập tổng số tiết học: ");

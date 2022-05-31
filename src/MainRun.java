@@ -1,4 +1,7 @@
+import constant.Level;
 import entity.Subject;
+import entity.Teacher;
+import entity.Teaching;
 
 import java.util.Scanner;
 
@@ -7,6 +10,15 @@ public class MainRun {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Management management = new Management();
+        Management.teachers = new Teacher[1000];
+        Management.subjects = new Subject[1000];
+        Management.teachings = new Teaching[1000];
+
+        Subject subject1 = new Subject("Toán",3,1,20);
+
+        Management.subjects[0] = subject1;
+        Subject subject2 = new Subject("Văn",3,1,20);
+        Management.subjects[1] = subject2;
 
         while (true) {
             int functionChoice = functionChoice();

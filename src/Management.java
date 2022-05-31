@@ -10,27 +10,34 @@ public class Management implements ManagementService {
     int soLuongMh;
     int soLuongGv;
 
-    private static Teacher[] teachers;
-    private static Subject[] subjects;
-    private Teaching[] teachings;
-
+    public static Teacher[] teachers;
+    public static Subject[] subjects;
+    public static Teaching[] teachings;
+    public static int teacherallnum = 0;
+    public static int subjectallnum = 0;
+    public static int teachingallnum = 0;
     static boolean check = true;
 
     @Override
     public void createTeacher() {
         System.out.println("Nhập số lượng gv: ");
         soLuongGv = new Scanner(System.in).nextInt();
-        teachers = new Teacher[soLuongGv];
-        for(int i=0; i < teachers.length;i++){
+
+        for(int i=0; i < soLuongGv;i++){
             Teacher teacher = new Teacher();
             teacher.inputInfo();
-            teachers[i] = teacher;
+            teachers[teacherallnum] = teacher;
+            teacherallnum ++;
         }
     }
 
     public void showInfoTeacher(){
-        for(Teacher t: teachers){
-            System.out.println(t);
+        for(Teacher t:teachers){
+            if(t!=null){
+                System.out.println(t);
+            }else {
+                break;
+            }
         }
     }
 
@@ -38,17 +45,23 @@ public class Management implements ManagementService {
     public void createSubject() {
         System.out.println("Nhập số lượng môn học: ");
         soLuongMh = new Scanner(System.in).nextInt();
-        subjects = new Subject[soLuongMh];
-        for(int i=0; i < subjects.length;i++){
+
+        for(int i=0; i < soLuongMh;i++){
             Subject subject = new Subject();
             subject.inputInfoSubject();
-            subjects[i] = subject;
+            subjects[subjectallnum] = subject;
+            subjectallnum++;
         }
     }
 
     public void showInfoSubject(){
         for(Subject s: subjects){
-            System.out.println(s);
+            if(s!= null){
+                System.out.println(s);
+            }
+            else {
+                break;
+            }
         }
     }
 
@@ -62,9 +75,24 @@ public class Management implements ManagementService {
     }
 
     public static boolean checkExist(){
-        return teachers != null && subjects != null && teachers.length != 0 && subjects.length != 0;
+        return teachers[0] != null && subjects[0] != null;
     }
-
+    public int searchTeacherById(int id){
+        for(int i = 0; i< teacherallnum; i++){
+            if(teachers[i].getTeacherId() == id){
+                return id;
+            }
+        }
+        return -1;
+    }
+    public int searchSubjectById(int id){
+        for(int i = 0; i<2; i++){
+            if(subjects[i].getSubjectId() == id){
+                return id;
+            }
+        }
+        return -1;
+    }
     @Override
     public void management(){
         if(!checkExist()){
@@ -72,18 +100,30 @@ public class Management implements ManagementService {
             return;
         }
 
-        teachings = new Teaching[soLuongGv];
+        System.out.println("Nhập số lượng giảng viên muốn kê khai");
+        int n = new Scanner(System.in).nextInt();
+        for (int i=1; i<=n;i++){
+            System.out.println("Nhập id cho giảng viên thứ "+i+" :");
+            int id;
+            do{
+                id = new Scanner(System.in).nextInt();
+                id = searchTeacherById(id);
 
-        for (int i=0; i<teachings.length;i++){
+                if(id !=-1){
+                    break;
+                }
+                System.out.println("Id giảng viên không tồn tại, mời nhập lại id cho giảng viên thứ "+ i);
+            }while(true);
 
-            System.out.println("Kê khai cho gv " + teachers[i].getName()+" có id "+ teachers[i].getTeacherId());
-            System.out.println("Nhập số môn dạy của "+teachers[i].getName()+" có id "+teachers[i].getTeacherId());
+
+            System.out.println("Kê khai cho gv " + teachers[id-100].getName()+" có id "+ teachers[id-100].getTeacherId());
+            System.out.println("Nhập số môn dạy của "+teachers[id-100].getName()+" có id "+teachers[id-100].getTeacherId());
             int soMon;
             do {
                 soMon = new Scanner(System.in).nextInt();
-                if(soMon <=0 || soMon > subjects.length) check = true;
+                if(soMon <=0 || soMon > subjectallnum) check = true;
             } while (!check);
-
+            check = true;
             Subject[] listMonGvDay = new Subject[soMon];      // list này chứa các môn mà gv trên dạy
             int[] totalClassArray = new int[soMon];
 
@@ -93,13 +133,23 @@ public class Management implements ManagementService {
             float salary = 0;
             for(int j=0;j<soMon;j++){
                 int tongSoTietCua1mon= 0;
-                System.out.print("Nhập id môn thứ " + (j + 1) + " mà giảng viên " + teachers[i].getName() + " dạy: ");
-                subjectId = new Scanner(System.in).nextInt();
+                System.out.print("Nhập id môn thứ " + (j + 1) + " mà giảng viên " + teachers[id-100].getName() + " dạy: ");
+
+
+                do{
+                    subjectId = new Scanner(System.in).nextInt();
+                    subjectId = searchSubjectById(subjectId);
+                    if(subjectId != -1){
+                        break;
+                    }
+                    System.out.println("Không tồn tại id môn học, vui lòng nhập lại id môn học: ");
+                }while (true);
+
 
                 // check xem neu subjectId đó tồn tại thì gán vào cho subject mới
                 Subject subject = getSubjectById(subjectId);
 
-                System.out.println("Nhập số lớp của môn thứ " + (j + 1) + " mà giảng viên " + teachers[i].getName() + " dạy:");
+                System.out.println("Nhập số lớp của môn thứ " + (j + 1) + " mà giảng viên " + teachers[id-100].getName() + " dạy:");
                 do {
                     tongSoLopCuaMon = new Scanner(System.in).nextInt();
                     if (tongSoLopCuaMon <= 0 || tongSoLopCuaMon > 3) {
@@ -110,39 +160,40 @@ public class Management implements ManagementService {
                         check = true;
                     }
                 } while (!check);
-
+                check = true;
                 // tổng số tiết của gv = số tiết môn * số lớp môn đó
-                tongSoTietCuaGv += tongSoTietCua1mon;
+
                 tongSoTietCua1mon =  subjects[j].getSoTiet() * tongSoLopCuaMon;
+                tongSoTietCuaGv += tongSoTietCua1mon;
                 if (tongSoTietCuaGv > 200) {
                     System.out.println("1 gv ko dạy quá 200 tiết!");
                     check = false;
                     break;
                 } else check = true;
-
+                check = true;
                 salary += subject.getMucKinhPhi() * tongSoTietCua1mon;
                 teachers[j].setSalary(salary);
-
                 listMonGvDay[j] = subject;
                 totalClassArray[j] = tongSoLopCuaMon;
 
-                Teaching teaching = new Teaching(teachers[i],listMonGvDay, totalClassArray,tongSoTietCuaGv);
-                teachings[i] = teaching;
 
             }
+            Teaching teaching = new Teaching(teachers[id-100],listMonGvDay, totalClassArray,tongSoTietCuaGv);
+            teachings[teachingallnum] = teaching;
+            teachingallnum ++;
 
         } // end nhap thong tin
     }
 
     @Override
     public void sortByName() {
-        if (teachings == null) {
+        if (teachings[0] == null) {
             System.out.println("Chưa có dữ liệu về giảng dạy, vui lòng kiểm tra lại quản lý giảng dạy");
             return;
         }
 
-        for (int i = 0; i < teachings.length; i++) {
-            for (int j = i + 1; j < teachings.length; j++) {
+        for (int i = 0; i < teachingallnum; i++) {
+            for (int j = i + 1; j < teachingallnum; j++) {
                 if (teachings[i].getTeacher().getName().compareTo(teachings[j].getTeacher().getName()) > 0) {
                     Teaching tmp = teachings[i];
                     teachings[i] = teachings[j];
@@ -156,12 +207,12 @@ public class Management implements ManagementService {
     public void sortByLessionNum() {
 
 
-        if (teachings == null) {
+        if (teachings[0] == null) {
             System.out.println("Chưa có dữ liệu về giảng dạy, vui lòng kiểm tra lại quản lý giảng dạy");
             return;
         }
-        for (int i = 0; i < teachings.length; i++) {
-            for (int j = i + 1; j < teachings.length; j++) {
+        for (int i = 0; i < teachingallnum; i++) {
+            for (int j = i + 1; j < teachingallnum; j++) {
                 System.out.println(teachings[i].getTongSoTiet());
                 if (teachings[i].getTongSoTiet()<teachings[j].getTongSoTiet()) {
                     Teaching tmp = teachings[i];
@@ -174,17 +225,20 @@ public class Management implements ManagementService {
 
     public void showManagement(){
         for (Teaching t: teachings){
-            System.out.println(t);
+            if(t!= null){
+                System.out.println(t);
+            }else {
+                break;
+            }
         }
     }
 
     public void tinhLuong(){
         float sumSalary = 0;
-        for(int i=0;i< teachers.length;i++){
+        for(int i=0;i< teacherallnum;i++){
             sumSalary += teachers[i].getSalary();
             System.out.println("Lương của gv "+teachers[i].getName()+" là: "+sumSalary);
         }
     }
-
 
 }

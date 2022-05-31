@@ -15,9 +15,10 @@ public class Teacher extends Person  {
 
     }
 
-    public Teacher(int teacherId, Level level) {
+    public Teacher(String teacherName,Level level) {
 
         this.teacherId = sId++;
+        this.name = teacherName;
         this.level = level;
     }
 
@@ -40,15 +41,15 @@ public class Teacher extends Person  {
     public void inputInfo(){
         this.teacherId = sId++;
         super.inputInfo();
-        System.out.print("\n Nhập trình độ: \n 1: là GS-TS \n 2: là PGS-TS \n 3: là GIANGVIENCHINH \n 4: là THACSI");
+        System.out.print("\n Nhập trình độ: \n 1: là GS-TS \n 2: là PGS-TS \n 3: là GIANGVIENCHINH \n 4: là THACSI \n");
         int nhapLevel = new Scanner(System.in).nextInt();
         do {
             switch (nhapLevel) {
                 case 1:
-                    level = Level.GSTS;
+                    level = Level.PGSTS;
                     break;
                 case 2:
-                    level = Level.PGSTS;
+                    level = Level.GSTS;
                     break;
                 case 3:
                     level = Level.GIANGVIENCHINH;

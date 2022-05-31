@@ -1,7 +1,7 @@
 package constant;
 
 public enum Level {
-    GSTS(1), PGSTS(2), GIANGVIENCHINH(3), THACSI(4);
+    GSTS(1), PGSTS(2), THACSI(4),GIANGVIENCHINH(3);
     private Integer code;
 
     Level(Integer  code) {
